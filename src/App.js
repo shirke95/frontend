@@ -3,7 +3,7 @@ import Footer from "./components/Footer";
 import Headers from "./components/Headers";
 import HomeScreens from "./screens/HomeScreens";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProductScreens from "./screens/ProductScreens";
+import ProductScreen from "./screens/ProductScreen";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
           <Routes>
             {/* Add more routes as needed */}{" "}
             <Route path="/" element={<HomeScreens />} />
-            <Route path="/product/:id" element={<ProductScreens />} />
+            <Route path="/product/:id" element={<ProductScreen />} />
           </Routes>
         </Container>
       </main>
