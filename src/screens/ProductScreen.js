@@ -23,7 +23,7 @@ function ProductScreen({ match }) {
   const addToCartHandler = () => {
     // Navigate to the cart with the product ID and quantity
     console.log('Add to cart:', id, 'Quantity:', qty);
-    history.push(`/cart/${id}?qty=${qty}`);
+    navigate(`/cart/${id}?qty=${qty}`);
     // window.location.href = `/cart/${id}?qty=${qty}`;
   };
 
