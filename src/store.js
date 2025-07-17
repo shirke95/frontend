@@ -2,13 +2,13 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { thunk } from "redux-thunk";
 
 // Import your reducers here
+import cartReducer from "./reducers/cartReducers";
 import {
   productDetailsReducer,
   productListReducer,
 } from "./reducers/productReducers";
-import cartReducer from "./reducers/cartReducers";
 
-const rootReducer = combineReducers({
+const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
   cart: cartReducer,
@@ -27,10 +27,12 @@ const initialState = {
 };
 const middleware = [thunk];
 
-const store = configureStore({
-  reducer: rootReducer,
-  preloadedState: initialState,
-  // You can add middleware or devTools options here if needed
-});
+const store = configureStore(
+  {
+    reducer: reducer,
+    preloadedState: initialState,
+  },
+  middleware
+);
 
 export default store;

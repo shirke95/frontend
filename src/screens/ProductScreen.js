@@ -13,17 +13,17 @@ function ProductScreen({ match }) {
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-  const { id } = useParams();
+  const productId = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(listProductDetails(id));
-  }, [id, dispatch]);
+    dispatch(listProductDetails(productId.id));
+  }, [productId.id, dispatch]);
 
   const addToCartHandler = () => {
     // Navigate to the cart with the product ID and quantity
-    console.log('Add to cart:', id, 'Quantity:', qty);
-    navigate(`/cart/${id}?qty=${qty}`);
+    console.log('Add to cart:', productId.id, 'Quantity:', qty);
+    navigate(`/cart/${productId.id}?qty=${qty}`);
     // window.location.href = `/cart/${id}?qty=${qty}`;
   };
 
