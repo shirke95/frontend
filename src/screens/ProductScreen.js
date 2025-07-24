@@ -22,7 +22,6 @@ function ProductScreen({ match }) {
 
   const addToCartHandler = () => {
     // Navigate to the cart with the product ID and quantity
-    console.log('Add to cart:', productId.id, 'Quantity:', qty);
     navigate(`/cart/${productId.id}?qty=${qty}`);
     // window.location.href = `/cart/${id}?qty=${qty}`;
   };

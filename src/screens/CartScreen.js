@@ -1,13 +1,5 @@
 import { useEffect } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Image,
-  ListGroup,
-  Row,
-} from "react-bootstrap";
+import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { addToCart, removeFromCart } from "../actions/cartActions";
@@ -25,6 +17,7 @@ function CartScreen({ match, history }) {
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
+  
 
   useEffect(() => {
     if (productId.id) {
@@ -34,11 +27,11 @@ function CartScreen({ match, history }) {
 
   const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id));
-    // console.log('remove',  id);
   };
 
   const checkoutHandler = () => {
-    navigate("/login?redirect=shipping");
+    navigate(`/login?redirect=/shipping`);
+    // navigate("/shipping");
   };
 
   return (
@@ -51,7 +44,9 @@ function CartScreen({ match, history }) {
           </Message>
         ) : (
           <ListGroup variant="flush">
+            
             {cartItems.map((item) => (
+              
               <ListGroup.Item key={item.product}>
                 <Row>
                   <Col md={2}>
@@ -64,21 +59,24 @@ function CartScreen({ match, history }) {
                   <Col md={2}>${item.price}</Col>
 
                   <Col md={3}>
-                    <Form.Control
-                      as="select"
+                    <select
                       value={item.qty}
                       onChange={(e) =>
                         dispatch(
                           addToCart(item.product, Number(e.target.value))
                         )
                       }
+                      className="form-control"
                     >
-                      {[...Array(item.countInStock).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
+                      {Array.from(
+                        { length: item.countInStock },
+                        (_, i) => i + 1
+                      ).map((val) => (
+                        <option key={val} value={val}>
+                          {val}
                         </option>
                       ))}
-                    </Form.Control>
+                    </select>
                   </Col>
 
                   <Col md={1}>
