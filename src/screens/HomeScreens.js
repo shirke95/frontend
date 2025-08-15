@@ -6,10 +6,12 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Product from "../components/Product";
 
-function HomeScreens() {
+function HomeScreen() {
+  // singular name for clarity
   const dispatch = useDispatch();
+
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products } = productList;
+  const { loading, error, products = [] } = productList; // default to empty array
 
   useEffect(() => {
     dispatch(listProducts());
@@ -22,6 +24,8 @@ function HomeScreens() {
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
+      ) : products.length === 0 ? (
+        <Message>No products found</Message>
       ) : (
         <Row>
           {products.map((product) => (
@@ -35,4 +39,4 @@ function HomeScreens() {
   );
 }
 
-export default HomeScreens;
+export default HomeScreen;
