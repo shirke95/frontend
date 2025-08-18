@@ -21,15 +21,6 @@ import {
   ORDER_PAY_REQUEST,
   ORDER_PAY_RESET,
   ORDER_PAY_SUCCESS,
-  ORDER_RAZORPAY_FAIL,
-  //
-  ORDER_RAZORPAY_REQUEST,
-  ORDER_RAZORPAY_RESET,
-  ORDER_RAZORPAY_SUCCESS,
-  PAYMENT_VERIFY_FAIL,
-  PAYMENT_VERIFY_REQUEST,
-  PAYMENT_VERIFY_RESET,
-  PAYMENT_VERIFY_SUCCESS,
 } from "../constants/orderConstants";
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -189,37 +180,6 @@ export const orderListReducer = (state = { orders: [] }, action) => {
         loading: false,
         error: action.payload,
       };
-    default:
-      return state;
-  }
-};
-
-//
-export const razorpayOrderReducer = (state = {}, action) => {
-  switch (action.type) {
-    case ORDER_RAZORPAY_REQUEST:
-      return { loading: true };
-    case ORDER_RAZORPAY_SUCCESS:
-      return { loading: false, order: action.payload };
-    case ORDER_RAZORPAY_FAIL:
-      return { loading: false, error: action.payload };
-    case ORDER_RAZORPAY_RESET:
-      return {};
-    default:
-      return state;
-  }
-};
-
-export const paymentVerifyReducer = (state = {}, action) => {
-  switch (action.type) {
-    case PAYMENT_VERIFY_REQUEST:
-      return { loading: true };
-    case PAYMENT_VERIFY_SUCCESS:
-      return { loading: false, success: true };
-    case PAYMENT_VERIFY_FAIL:
-      return { loading: false, error: action.payload };
-    case PAYMENT_VERIFY_RESET:
-      return {};
     default:
       return state;
   }

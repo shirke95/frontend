@@ -17,15 +17,7 @@ import {
   ORDER_LIST_SUCCESS,
   ORDER_PAY_FAIL,
   ORDER_PAY_REQUEST,
-  ORDER_PAY_SUCCESS,
-  ORDER_RAZORPAY_FAIL,
-  ORDER_RAZORPAY_REQUEST,
-  ORDER_RAZORPAY_RESET,
-  ORDER_RAZORPAY_SUCCESS,
-  PAYMENT_VERIFY_FAIL,
-  PAYMENT_VERIFY_REQUEST,
-  PAYMENT_VERIFY_RESET,
-  PAYMENT_VERIFY_SUCCESS,
+  ORDER_PAY_SUCCESS
 } from "../constants/orderConstants";
 
 import { CART_CLEAR_ITEMS } from "../constants/cartConstants";
@@ -247,71 +239,4 @@ export const listOrders = () => async (dispatch, getState) => {
           : error.message,
     });
   }
-};
-
-//
-
-export const createRazorpayOrder = (amount) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: ORDER_RAZORPAY_REQUEST });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.post(
-      "/api/orders/create-order/",
-      { amount },
-      config
-    );
-
-    dispatch({ type: ORDER_RAZORPAY_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: ORDER_RAZORPAY_FAIL,
-      payload: error.response?.data?.error || error.message,
-    });
-  }
-};
-
-export const verifyPayment = (paymentData) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: PAYMENT_VERIFY_REQUEST });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    await axios.post("/api/orders/verify-payment/", paymentData, config);
-
-    dispatch({ type: PAYMENT_VERIFY_SUCCESS });
-  } catch (error) {
-    dispatch({
-      type: PAYMENT_VERIFY_FAIL,
-      payload: error.response?.data?.error || error.message,
-    });
-  }
-};
-
-// RESET Actions
-export const resetRazorpayOrder = () => (dispatch) => {
-  dispatch({ type: ORDER_RAZORPAY_RESET });
-};
-
-export const resetPaymentVerify = () => (dispatch) => {
-  dispatch({ type: PAYMENT_VERIFY_RESET });
 };

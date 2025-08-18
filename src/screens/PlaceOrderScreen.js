@@ -1,45 +1,47 @@
 import { useEffect } from "react";
 import { Button, Card, Col, Image, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom"; // ⬅ useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { createOrder } from "../actions/orderActions";
 import CheckoutSteps from "../components/CheckoutSteps";
 import Message from "../components/Message";
 import { ORDER_CREATE_RESET } from "../constants/orderConstants";
 
 function PlaceOrderScreen() {
-  const navigate = useNavigate(); // ⬅ replaces history
-
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, error, success } = orderCreate;
-  console.log(orderCreate);
-  
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart);
 
-  cart.itemsPrice = cart.cartItems
+  // ✅ Calculate values locally instead of mutating cart state
+  const itemsPrice = cart.cartItems
     .reduce((acc, item) => acc + item.price * item.qty, 0)
     .toFixed(2);
-  cart.shippingPrice = (cart.itemsPrice > 100 ? 0 : 10).toFixed(2);
-  cart.taxPrice = Number(0.082 * cart.itemsPrice).toFixed(2);
-  cart.totalPrice = (
-    Number(cart.itemsPrice) +
-    Number(cart.shippingPrice) +
-    Number(cart.taxPrice)
+
+  const shippingPrice = (itemsPrice > 100 ? 0 : 10).toFixed(2);
+  const taxPrice = Number(0.082 * itemsPrice).toFixed(2);
+
+  const totalPrice = (
+    Number(itemsPrice) +
+    Number(shippingPrice) +
+    Number(taxPrice)
   ).toFixed(2);
 
-  if (!cart.paymentMethod) {
-    navigate("/payment");
-  }
+  useEffect(() => {
+    if (!cart.paymentMethod) {
+      navigate("/payment");
+    }
+  }, [cart.paymentMethod, navigate]);
 
   useEffect(() => {
     if (success) {
-      navigate(`/order/${order._id}`); // ⬅ replaced history.push
+      navigate(`/order/${order._id}`);
       dispatch({ type: ORDER_CREATE_RESET });
     }
-  }, [dispatch, navigate, order, success]);
+  }, [success, navigate, order, dispatch]);
 
   const placeOrder = () => {
     dispatch(
@@ -47,14 +49,13 @@ function PlaceOrderScreen() {
         orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod,
-        itemsPrice: cart.itemsPrice,
-        shippingPrice: cart.shippingPrice,
-        taxPrice: cart.taxPrice,
-        totalPrice: cart.totalPrice,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
       })
     );
   };
-  console.log("PlaceOrderScreen rendered");
 
   return (
     <div>
@@ -103,7 +104,7 @@ function PlaceOrderScreen() {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} X ${item.price} = $
+                          {item.qty} x ${item.price} = $
                           {(item.qty * item.price).toFixed(2)}
                         </Col>
                       </Row>
@@ -125,28 +126,28 @@ function PlaceOrderScreen() {
               <ListGroup.Item>
                 <Row>
                   <Col>Items:</Col>
-                  <Col>${cart.itemsPrice}</Col>
+                  <Col>${itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping:</Col>
-                  <Col>${cart.shippingPrice}</Col>
+                  <Col>${shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Row>
                   <Col>Tax:</Col>
-                  <Col>${cart.taxPrice}</Col>
+                  <Col>${taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Row>
                   <Col>Total:</Col>
-                  <Col>${cart.totalPrice}</Col>
+                  <Col>${totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
 

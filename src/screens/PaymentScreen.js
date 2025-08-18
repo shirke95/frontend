@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // ✅ import useNavigate
 import { savePaymentMethod } from "../actions/cartActions";
 import CheckoutSteps from "../components/CheckoutSteps";
 import FormContainer from "../components/FormContainer";
@@ -11,18 +11,20 @@ function PaymentScreen() {
   const { shippingAddress } = cart;
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // ✅ initialize navigate
 
   const [paymentMethod, setPaymentMethod] = useState("PayPal");
 
-  if (!shippingAddress.address) {
-    navigate("/shipping");
-  }
+  useEffect(() => {
+    if (!shippingAddress.address) {
+      navigate("/shipping"); // ✅ replace history.push
+    }
+  }, [shippingAddress, navigate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(savePaymentMethod(paymentMethod));
-    navigate("/placeorder");
+    navigate("/placeorder"); // ✅ replace history.push
   };
 
   return (
@@ -38,7 +40,8 @@ function PaymentScreen() {
               label="PayPal or Credit Card"
               id="paypal"
               name="paymentMethod"
-              checked
+              value="PayPal" // ✅ added value to store correctly
+              checked={paymentMethod === "PayPal"}
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
           </Col>

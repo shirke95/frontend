@@ -1,6 +1,4 @@
-import { applyMiddleware, combineReducers, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import { thunk } from "redux-thunk";
+import { configureStore } from "@reduxjs/toolkit";
 import {
   productCreateReducer,
   productDeleteReducer,
@@ -30,39 +28,7 @@ import {
   orderListMyReducer,
   orderListReducer,
   orderPayReducer,
-  paymentVerifyReducer,
-  razorpayOrderReducer,
 } from "./reducers/orderReducers";
-
-// Combine all reducers
-const reducer = combineReducers({
-  productList: productListReducer,
-  productDetails: productDetailsReducer,
-  productDelete: productDeleteReducer,
-  productCreate: productCreateReducer,
-  productUpdate: productUpdateReducer,
-  productReviewCreate: productReviewCreateReducer,
-  productTopRated: productTopRatedReducer,
-
-  cart: cartReducer,
-
-  userLogin: userLoginReducer,
-  userRegister: userRegisterReducer,
-  userDetails: userDetailsReducer,
-  userUpdateProfile: userUpdateProfileReducer,
-  userList: userListReducer,
-  userDelete: userDeleteReducer,
-  userUpdate: userUpdateReducer,
-
-  orderCreate: orderCreateReducer,
-  orderDetails: orderDetailsReducer,
-  orderPay: orderPayReducer,
-  orderListMy: orderListMyReducer,
-  orderList: orderListReducer,
-  orderDeliver: orderDeliverReducer,
-  razorpayOrder: razorpayOrderReducer,
-  paymentVerify: paymentVerifyReducer,
-});
 
 // Get initial state from localStorage
 const cartItemsFromStorage = localStorage.getItem("cartItems")
@@ -82,7 +48,7 @@ const paymentMethodFromStorage = localStorage.getItem("paymentMethod")
   : "";
 
 // Initial state
-const initialState = {
+const preloadedState = {
   cart: {
     cartItems: cartItemsFromStorage,
     shippingAddress: shippingAddressFromStorage,
@@ -91,14 +57,36 @@ const initialState = {
   userLogin: { userInfo: userInfoFromStorage },
 };
 
-// Middleware
-const middleware = [thunk];
+// Configure store
+const store = configureStore({
+  reducer: {
+    productList: productListReducer,
+    productDetails: productDetailsReducer,
+    productDelete: productDeleteReducer,
+    productCreate: productCreateReducer,
+    productUpdate: productUpdateReducer,
+    productReviewCreate: productReviewCreateReducer,
+    productTopRated: productTopRatedReducer,
 
-// Create store
-const store = createStore(
-  reducer,
-  initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
-);
+    cart: cartReducer,
+
+    userLogin: userLoginReducer,
+    userRegister: userRegisterReducer,
+    userDetails: userDetailsReducer,
+    userUpdateProfile: userUpdateProfileReducer,
+    userList: userListReducer,
+    userDelete: userDeleteReducer,
+    userUpdate: userUpdateReducer,
+
+    orderCreate: orderCreateReducer,
+    orderDetails: orderDetailsReducer,
+    orderPay: orderPayReducer,
+    orderListMy: orderListMyReducer,
+    orderList: orderListReducer,
+    orderDeliver: orderDeliverReducer,
+  },
+  preloadedState,
+  devTools: true, // you don’t need composeWithDevTools anymore
+});
 
 export default store;

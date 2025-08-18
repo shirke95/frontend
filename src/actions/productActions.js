@@ -23,6 +23,7 @@ import {
   PRODUCT_UPDATE_SUCCESS,
 } from "../constants/productConstants";
 
+// ✅ List products
 export const listProducts =
   (keyword = "") =>
   async (dispatch) => {
@@ -46,6 +47,7 @@ export const listProducts =
     }
   };
 
+// ✅ List top products
 export const listTopProducts = () => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_TOP_REQUEST });
@@ -67,6 +69,7 @@ export const listTopProducts = () => async (dispatch) => {
   }
 };
 
+// ✅ Get product details
 export const listProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
@@ -88,11 +91,10 @@ export const listProductDetails = (id) => async (dispatch) => {
   }
 };
 
+// ✅ Delete product
 export const deleteProduct = (id) => async (dispatch, getState) => {
   try {
-    dispatch({
-      type: PRODUCT_DELETE_REQUEST,
-    });
+    dispatch({ type: PRODUCT_DELETE_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -105,7 +107,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.delete(`/api/products/delete/${id}/`, config);
+    await axios.delete(`/api/products/delete/${id}/`, config);
 
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
@@ -121,11 +123,10 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
   }
 };
 
+// ✅ Create product
 export const createProduct = () => async (dispatch, getState) => {
   try {
-    dispatch({
-      type: PRODUCT_CREATE_REQUEST,
-    });
+    dispatch({ type: PRODUCT_CREATE_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -139,6 +140,7 @@ export const createProduct = () => async (dispatch, getState) => {
     };
 
     const { data } = await axios.post(`/api/products/create/`, {}, config);
+
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
       payload: data,
@@ -154,11 +156,10 @@ export const createProduct = () => async (dispatch, getState) => {
   }
 };
 
+// ✅ Update product
 export const updateProduct = (product) => async (dispatch, getState) => {
   try {
-    dispatch({
-      type: PRODUCT_UPDATE_REQUEST,
-    });
+    dispatch({ type: PRODUCT_UPDATE_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -176,11 +177,13 @@ export const updateProduct = (product) => async (dispatch, getState) => {
       product,
       config
     );
+
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
       payload: data,
     });
 
+    // ✅ Keep product details in sync
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
       payload: data,
@@ -196,12 +199,11 @@ export const updateProduct = (product) => async (dispatch, getState) => {
   }
 };
 
+// ✅ Create product review
 export const createProductReview =
   (productId, review) => async (dispatch, getState) => {
     try {
-      dispatch({
-        type: PRODUCT_CREATE_REVIEW_REQUEST,
-      });
+      dispatch({ type: PRODUCT_CREATE_REVIEW_REQUEST });
 
       const {
         userLogin: { userInfo },
@@ -219,6 +221,7 @@ export const createProductReview =
         review,
         config
       );
+
       dispatch({
         type: PRODUCT_CREATE_REVIEW_SUCCESS,
         payload: data,
